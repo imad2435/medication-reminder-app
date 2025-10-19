@@ -1,7 +1,7 @@
- import mongoose from "mongoose";
+import mongoose from "mongoose"; // <-- Use import
 
 const medicationSchema = new mongoose.Schema({
-    userId: { type: String, required: true, trim: true }, // or ObjectId if referencing User
+    userId: { type: String, required: true, trim: true },
     name: { type: String, required: true, trim: true },
     dosage: { type: String, trim: true },
     frequency: { type: String, trim: true },
@@ -10,6 +10,10 @@ const medicationSchema = new mongoose.Schema({
     reminderTimes: [{ type: String, trim: true }],
     notes: { type: String, default: "", trim: true },
     lastTaken: { type: Date }
-}, { collection: "medications" });
+}, {
+    timestamps: true, // It's good practice to add timestamps
+    collection: "medications"
+});
 
-export default mongoose.model("Medication", medicationSchema);
+const Medication = mongoose.model("Medication", medicationSchema);
+export default Medication; // <-- This was fine, but we change the model creation for consistency

@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; // <-- Use import
+
 const historySchema = new mongoose.Schema({
     userId:{
         type:String,
@@ -20,6 +21,7 @@ const historySchema = new mongoose.Schema({
         required:true,
         default:Date.now
     }
-},{collection:"history"});
+}, { collection: "history" });
 
-export default mongoose.model("History", historySchema);
+const History = mongoose.model("History", historySchema);
+export default History; // <-- Use export default
