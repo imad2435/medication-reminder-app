@@ -1,11 +1,14 @@
 import Reminder from "../models/Reminder.model.js";
+import moment from "moment-timezone";
+
 export const createReminder = async (req, res) => {
   try {
     const { userId, message, remindAt } = req.body;
+    const remindAtUTC=moment.tz(remindAt,"YYYY-MM-DD HH:mm","Asia/Karachi").toDate();
     const reminder = new Reminder({
       userId,
       message,
-      remindAt,
+      remindAt:remindAtUTC
     });
     await reminder.save();
     res.status(201).json({
