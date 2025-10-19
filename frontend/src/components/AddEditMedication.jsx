@@ -129,12 +129,12 @@ const AddEditMedication = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
    
-      <div className="max-w-4xl w-full px-6 mb-4 text-gray-600 text-sm">
+      <div className="max-w-4xl w-full px-6 mb-4 text-emerald-600 text-sm">
         <span className="text-gray-400">Home</span> &gt; Add Medication
       </div>
 
       <div className="max-w-4xl w-full bg-white shadow-xl rounded-2xl p-8">
-        <h2 className="text-4xl font-extrabold text-center mb-8 text-gray-800">
+        <h2 className="text-4xl font-extrabold text-center mb-8 text-emerald-600">
           Add New Medication
         </h2>
         {error && (
@@ -240,7 +240,7 @@ const AddEditMedication = () => {
                     <button
                         type="button"
                         onClick={addReminderTime}
-                        className="w-full mt-3 inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="w-full mt-3 inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
                     >
                         Add Another Time
                     </button>
@@ -298,7 +298,7 @@ const AddEditMedication = () => {
           <div className="col-span-1 md:col-span-2 flex flex-col items-center space-y-4 pt-6">
             <button
               type="submit"
-              className="w-full md:w-auto px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-teal-300"
+              className="w-full md:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-emerald-300"
               disabled={loading}
             >
               {loading ? 'Saving...' : 'Save Medication'}
