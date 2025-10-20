@@ -5,6 +5,7 @@ import connectDB from './config/db.js';
 import medicationsRoutes from './routes/medication.route.js';
 import historyRoutes from './routes/history.route.js';
 import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js'; // <-- ADD THIS IMPORT
 
 // Load environment variables immediately
 dotenv.config();
@@ -19,24 +20,21 @@ app.use(express.json());
 app.use("/api/medications", medicationsRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes); // <-- ADD THIS LINE TO USE THE ROUTE
 
-const port = process.env.PORT || 5001; // Using 5001 to be consistent
+const port = process.env.PORT || 5001;
 
-// --- CORRECTED STARTUP LOGIC ---
+// --- Server Startup Logic ---
 const startServer = async () => {
+  // ... (existing startServer function remains here)
   try {
-    // 1. Connect to the database
     await connectDB();
-
-    // 2. Only if the DB connection is successful, start the server
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
     });
-
   } catch (error) {
     console.error("Failed to connect to the database. Server is not starting.", error);
   }
 };
 
-// --- RUN THE STARTUP LOGIC ---
 startServer();
