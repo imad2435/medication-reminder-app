@@ -1,4 +1,6 @@
 import User from '../models/User.model.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 // We don't need bcrypt here because the hashing is done in the model
 
 // @desc    Register a new user
