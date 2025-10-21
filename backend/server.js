@@ -1,29 +1,40 @@
-// Import required packages
-const connectDB = require('./config/db');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import connectDB from './config/db.js';
+import medicationsRoutes from './routes/medication.route.js';
+import historyRoutes from './routes/history.route.js';
+import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js'; // <-- ADD THIS IMPORT
 
-const express = require('express');
-const cors = require('cors');
- // Import the database connection function
+// Load environment variables immediately
+dotenv.config();
 
-// Initialize Express App
 const app = express();
-
-// Connect to Database
-connectDB();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// A simple test route
-app.get('/', (req, res) => {
-  res.json({ message: "Hello from the backend server!" });
-});
+// API Routes
+app.use("/api/medications", medicationsRoutes);
+app.use("/api/history", historyRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes); // <-- ADD THIS LINE TO USE THE ROUTE
 
-// Define Port
-const PORT = process.env.PORT || 5001;
+const port = process.env.PORT || 5001;
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}`);
-});
+// --- Server Startup Logic ---
+const startServer = async () => {
+  // ... (existing startServer function remains here)
+  try {
+    await connectDB();
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to connect to the database. Server is not starting.", error);
+  }
+};
+
+startServer();
