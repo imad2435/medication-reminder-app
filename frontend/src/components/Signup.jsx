@@ -1,10 +1,12 @@
+//--- File: medication-reminder-app/frontend/src/components/Signup.jsx ---//
 
 import React, { useState, useEffect } from 'react';
-import { loginUser, storeAuthToken } from '../api/authApi';
+import { registerUser } from '../api/authApi'; 
 import { Link, useNavigate } from 'react-router-dom';
 
-const Login = ({ setIsAuthenticated }) => {
-  const [credentials, setCredentials] = useState({
+const Signup = ({ setIsAuthenticated }) => {
+  const [userData, setUserData] = useState({
+    username: '',
     email: '',
     password: '',
   });
@@ -17,7 +19,7 @@ const Login = ({ setIsAuthenticated }) => {
     if (successMessage) {
         const timer = setTimeout(() => {
             setSuccessMessage(null);
-            navigate('/'); 
+            navigate('/login'); 
         }, 2000); 
         return () => clearTimeout(timer);
     }
@@ -31,8 +33,8 @@ const Login = ({ setIsAuthenticated }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCredentials((prevCredentials) => ({
-      ...prevCredentials,
+    setUserData((prevData) => ({
+      ...prevData,
       [name]: value,
     }));
   };
@@ -43,37 +45,36 @@ const Login = ({ setIsAuthenticated }) => {
     setError(null);
     setSuccessMessage(null);
 
-    if (!credentials.email || !credentials.password) {
-      setError("Email and password are required.");
+    if (!userData.username || !userData.email || !userData.password) {
+      setError("All fields are required.");
       setLoading(false);
       return;
     }
 
     try {
-      const response = await loginUser(credentials);
-      storeAuthToken(response.token); 
-      setIsAuthenticated(true); 
-      setSuccessMessage('Login successful!');
-      console.log('Login response:', response);
-      setCredentials({ email: '', password: '' }); 
+      const response = await registerUser(userData);
+      setSuccessMessage('Registration successful! Please log in.');
+      console.log('Registration response:', response);
+      setUserData({ username: '', email: '', password: '' }); 
 
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-   
-    <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50"> 
+    // Removed gradient background, kept min-h-screen and centered content
+    <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50"> {/* Added a very light gray background */}
+      {/* Increased max-w-lg to max-w-xl and adjusted padding */}
       <div className="max-w-xl w-full bg-white shadow-2xl rounded-3xl p-14 space-y-10 border border-gray-200 transform hover:scale-105 transition duration-300 ease-in-out">
         <div>
           <h2 className="mt-6 text-center text-5xl font-extrabold text-gray-900 drop-shadow-sm">
-            Welcome Back!
+            Create Account
           </h2>
           <p className="mt-2 text-center text-lg text-gray-600">
-            Sign in to continue managing your medications.
+            Start managing your medications today!
           </p>
         </div>
         {error && (
@@ -91,6 +92,20 @@ const Login = ({ setIsAuthenticated }) => {
         <form className="mt-8 space-y-8" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
+              <label htmlFor="username" className="sr-only">Username</label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                required
+                className="appearance-none rounded-t-lg relative block w-full px-4 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 text-xl transition duration-150 ease-in-out"
+                placeholder="Username"
+                value={userData.username}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
               <label htmlFor="email-address" className="sr-only">Email address</label>
               <input
                 id="email-address"
@@ -98,9 +113,9 @@ const Login = ({ setIsAuthenticated }) => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-t-lg relative block w-full px-4 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl transition duration-150 ease-in-out"
+                className="appearance-none relative block w-full px-4 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 text-xl transition duration-150 ease-in-out"
                 placeholder="Email address"
-                value={credentials.email}
+                value={userData.email}
                 onChange={handleChange}
               />
             </div>
@@ -110,11 +125,11 @@ const Login = ({ setIsAuthenticated }) => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
-                className="appearance-none rounded-b-lg relative block w-full px-4 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl transition duration-150 ease-in-out"
+                className="appearance-none rounded-b-lg relative block w-full px-4 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 text-xl transition duration-150 ease-in-out"
                 placeholder="Password"
-                value={credentials.password}
+                value={userData.password}
                 onChange={handleChange}
               />
             </div>
@@ -123,16 +138,16 @@ const Login = ({ setIsAuthenticated }) => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-xl font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg transform hover:scale-100 transition duration-150 ease-in-out"
+              className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-xl font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 shadow-lg transform hover:scale-100 transition duration-150 ease-in-out"
               disabled={loading}
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? 'Registering...' : 'Sign Up'}
             </button>
           </div>
         </form>
         <div className="text-lg text-center">
-          <Link to="/signup" className="font-medium text-emerald-600  hover:text-emerald-500 transition duration-150 ease-in-out">
-            Don't have an account? Sign Up
+          <Link to="/login" className="font-medium text-emerald-600 hover:text-emerald-500 transition duration-150 ease-in-out">
+            Already have an account? Sign In
           </Link>
         </div>
       </div>
@@ -140,4 +155,4 @@ const Login = ({ setIsAuthenticated }) => {
   );
 };
 
-export default Login;
+export default Signup;
