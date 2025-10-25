@@ -9,6 +9,7 @@ import userRoutes from './routes/user.route.js'; // <-- ADD THIS IMPORT
 
 // Load environment variables immediately
 dotenv.config();
+console.log("✅ MONGODB_URI from .env:", process.env.MONGODB_URI);
 
 const app = express();
 
