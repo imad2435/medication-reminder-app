@@ -51,6 +51,7 @@ const Login = ({ setIsAuthenticated }) => {
 
     try {
       const response = await loginUser(credentials);
+       console.log("🔵 Login response from API:", response); 
       storeAuthToken(response.token); 
       setIsAuthenticated(true); 
       setSuccessMessage('Login successful!');
