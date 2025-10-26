@@ -1,8 +1,10 @@
 import express from 'express';
-import { getHistory } from '../controllers/history.controller.js'; // <-- Use import, add .js
+import { getHistory } from '../controllers/history.controller.js';
+import { protect } from '../middleware/auth.middleware.js'; // <-- ADD THIS LINE
 
 const router = express.Router();
 
-router.get('/', getHistory);
+// Now 'protect' is defined and can be used as middleware
+router.get('/', protect, getHistory);
 
-export default router; // <-- Use export default
+export default router;
