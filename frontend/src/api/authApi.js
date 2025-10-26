@@ -1,38 +1,22 @@
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5001/api/auth'; 
+import api from './axiosConfig.js';
 
 export const registerUser = async (userData) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/register`, userData);
-    return response.data;
-  } catch (error) {
-    console.error('Error registering user:', error.response?.data?.message || error.message);
-    throw error; 
-  }
+  const { data } = await api.post('/auth/register', userData);
+  return data;
 };
 
 export const loginUser = async (credentials) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/login`, credentials);
-    return response.data; // This should contain the token and user info
-  } catch (error) {
-    console.error('Error logging in:', error.response?.data?.message || error.message);
-    throw error;
-  }
+  // This function ONLY makes the API call. It does not touch local storage.
+  const { data } = await api.post('/auth/login', credentials);
+  return data; 
 };
 
-// Function to store the token in local storage
-export const storeAuthToken = (token) => {
-  localStorage.setItem('authToken', token);
+export const logoutUser = () => {
+  // This function ONLY removes the item from local storage.
+  localStorage.removeItem('userInfo');
 };
 
-// Function to get the token from local storage
-export const getAuthToken = () => {
-  return localStorage.getItem('authToken');
-};
-
-// (logout)
-export const removeAuthToken = () => {
-  localStorage.removeItem('authToken');
+export const getUserInfo = () => {
+  const userInfoString = localStorage.getItem('userInfo');
+  return userInfoString ? JSON.parse(userInfoString) : null;
 };
