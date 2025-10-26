@@ -1,38 +1,35 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.model.js';
 
-const protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   let token;
 
-  // Check if the token is in the Authorization header and starts with "Bearer"
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    try {
-      // 1. Get token from header (e.g., "Bearer <token>")
-      token = req.headers.authorization.split(' ')[1];
+  // Headers are case-insensitive, so we access them via lowercase 'authorization'
+  const authHeader = req.headers.authorization;
 
-      // 2. Verify the token using the secret key
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      // Extract the token from the "Bearer <token>" string
+      token = authHeader.split(' ')[1];
+
+      // Verify the token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // 3. Find the user by the ID from the token's payload
-      //    Attach the user object to the request, but exclude the password
+      // Get user from the token and attach to the request object
       req.user = await User.findById(decoded.id).select('-password');
 
       if (!req.user) {
-        return res.status(401).json({ message: 'Not authorized, user not found' });
+        return res.status(401).json({ success: false, error: 'User not found' });
       }
 
-      // 4. Move on to the next function in the chain (the actual route controller)
+      // Proceed to the next middleware/controller
       next();
     } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      console.error('JWT verification failed:', error.message);
+      return res.status(401).json({ success: false, error: 'Not authorized, token failed' });
     }
-  }
-
-  // If there's no token at all
-  if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
+  } else {
+    // This will run if the header is missing or doesn't start with "Bearer "
+    return res.status(401).json({ success: false, error: 'Not authorized, no token provided' });
   }
 };
-
-export { protect };
