@@ -1,18 +1,28 @@
-import express from 'express'; // <-- Need to import express
-import { protect } from '../middleware/auth.middleware.js'; // <-- 1. IMPORT THE MIDDLEWARE
-
+import express from 'express';
+import { protect } from '../middleware/auth.middleware.js';
 import {
   createMedication,
   getMedications,
+  getMedicationById, // <-- Import new function
   updateMedication,
-  deleteMedication
-} from "../controllers/medication.controller.js"; // <-- Import named exports, add .js
+  deleteMedication,
+  logMedicationStatus // <-- Import new function
+} from "../controllers/medication.controller.js";
 
 const router = express.Router();
 
-router.post("/", protect, createMedication);
-router.get("/", protect ,getMedications);
-router.put("/:id", protect, updateMedication);
-router.delete("/:id", protect, deleteMedication);
+// Apply protect middleware to all routes
+router.use(protect);
+
+router.route('/')
+  .post(createMedication)
+  .get(getMedications);
+
+router.route('/:id')
+  .get(getMedicationById) // <-- Add route to get single medication
+  .put(updateMedication)
+  .delete(deleteMedication);
+
+router.post('/:id/log', logMedicationStatus); // <-- Add route to log status
 
 export default router;
