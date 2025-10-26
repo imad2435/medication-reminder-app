@@ -6,10 +6,8 @@ node_modules/
 
 # Environment files
 # NEVER commit your secret keys!
-.env
 /frontend/.env
 /backend/.env
-.env.local
 .env.*.local
 
 # Vite build output
@@ -33,3 +31,4 @@ yarn-error.log*
 # Operating System files
 .DS_Store
 Thumbs.db
+config.bat
